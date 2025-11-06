@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './login.css'
 
-const login = () => {
+const Login = () => {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -10,6 +11,13 @@ const login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const apiUrl = 'http://localhost:8000/api/auth/login';
+
+        try{
+            const response = await axios
+        }catch{
+            
+        }
     }
 
   return (
@@ -49,4 +57,4 @@ const login = () => {
   );
 }
 
-export default login;
+export default Login;
