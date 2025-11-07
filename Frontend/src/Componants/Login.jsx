@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './login.css'
 
+
 const Login = () => {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -14,11 +15,45 @@ const Login = () => {
         const apiUrl = 'http://localhost:8000/api/auth/login';
 
         try{
-            const response = await axios
-        }catch{
-            
+            const response = await axios.post(apiUrl,{userName, password});
+            console.log("Response==",response);
+
+            localStorage.setItem('authToken', response.data.token)
+            console.log("Response Token==",response.data.token);
+
+            setSuccessMessage("Login Successful!");
+            alert(response.data.message)
+
+            const userRole = response.data.user.role;
+
+            // Save user-specific details based on role and navigate
+            if(userRole === 'admin'){
+                navigate('/admin');
+            } else if(userRole === 'user'){
+                localStorage.setItem('userlogId', response.data.user.id);
+                navigate('/user-home');
+            } else if(userRole === 'doctor'){
+                localStorage.setItem('doctorlogId',response.data.user.id)
+                navigate('/doctor-home')
+            } else if(userRole === 'shop'){
+                localStorage.setItem('shoplogId',response.data.user.id)
+                navigate('/shophome')
+            } else if(userRole === 'labStaff'){
+                localStorage.setItem('lablogId',response.data.user.id)
+                navigate('/labhome')
+            } else if(userRole === 'deliveryboy'){
+                localStorage.setItem('deliverylogId',response.data.user.id)
+                navigate('/deliveryboy')
+            } else{
+                // Handle any additional case
+                navigate('./')
+            }
+        }catch(error){
+            setErrorMessage(
+                error.response?.data?.message || 'An error occurred. Please try again.'
+            );
         }
-    }
+    };
 
   return (
     <div className='login-body'>
@@ -38,7 +73,7 @@ const Login = () => {
                     </div>
 
                     <div className="button-group">
-                        <button type="submit" className="login-button">
+                        <button type="submit" className="login-button" onClick={handleSubmit}>
                             Login
                         </button>
                     </div>
