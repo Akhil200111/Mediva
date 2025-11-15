@@ -79,7 +79,7 @@ const AdminDashboard = () => {
         <Col xs={12} md={10} className='adminmain-content mt-5'>
          {/* Dynamic Views */}
            {view == 'addDoctor' && <AddDoctor />}
-           {view == 'viewDoctor' && (<AdminViewDoctor 
+           {view == 'viewDoctors' && (<AdminViewDoctor 
            onEditDoctor = {(id) => handleViewChange('editDoctor', id)}
            onAddDoctor = {() => handleViewChange('addDoctor')}
            />)}
