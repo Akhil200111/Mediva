@@ -126,8 +126,28 @@ const AddDoctor = () => {
               onChange={handleChange}
             />
           </div>
-        ))
-        }
+        ))}
+        <div className="mb-3">
+          <label htmlFor="image" className="form-label">Upload Image</label>
+          <input type="file" className="form-control" id="image" name='image' onChange={handleChange}/>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">Password</label>
+          <input 
+              type="password" 
+              className="form-control" 
+              id="password" 
+              name='password'
+              placeholder='Enter Password'
+              value={formData.password}
+              onChange={handleChange}
+              />
+              {errors.password && <small className='text-danger'>{errors.password}</small>}
+        </div>
+        
+        <div className="d-grid gap-2">
+          <button type="submit" className="btn btn-primary">Add Doctor</button>
+        </div>
       </form>
     </div>
   );
