@@ -12,11 +12,64 @@ const AddLaboratoryStaff = () => {
     password: ""
   });
 
-  const [error, setError] = useState({});
+  const [errors, setError] = useState({});
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+ const handleChange = (e) => {
+  setFormData({ ...formData, [e.target.name]: e.target.value});
+ };
 
+ const validateForm = () => {
+  let newError = {};
+  if(!formData.name) newError.name = "Name is required";
+  if(!formData.address) newError.address = "Address is required";
+  if(!formData.phone) newError.phone = "Phone Number is required";
+  if(!formData.email) newError.email = "Email is required";
+  if(!formData.password) newError.password = "Password is required";
+
+  return newError;
+ }
+
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  const validationError = validateForm();
+  if(Object.keys(validationError).length > 0){
+    setError(validationError);
+    return;
+ }
+
+ setLoading(true);
+ setError({});
+ setMessage("");
+
+ try {
+  const token = localStorage.getItem("authToken");
+
+  const response = await axios.post(
+    "http://localhost:8000/api/laboratory-staff",
+    formData,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if(response.data.authToken){
+    localStorage.setItem("authToken", response.data.authToken);
+  }
+
+  setMessage("Laboratory staff added successfully!");
+  setFormData({name: "", address: "", phone: "", email: "", password: ""});
+
+ } catch (error) {
+  setMessage(error.response?.data?.error || "failed to add staff");
+ } finally{
+  setLoading(false);
+ }
+ };
 
   return (
     <div>
@@ -31,8 +84,36 @@ const AddLaboratoryStaff = () => {
               <Form.Group className='mb-3'>
                 <Form.Label>Name</Form.Label>
                 <Form.Control type='text' name='name' value={FormData.name} onChange={handleChange} isInvalid= {!error.name}></Form.Control>
-                <Form.Control.Feedback type='invalid'>{error.name}</Form.Control.Feedback>
+                <Form.Control.Feedback type='invalid'>{errors.name}</Form.Control.Feedback>
               </Form.Group>
+
+               <Form.Group className="mb-3">
+              <Form.Label>Address</Form.Label>
+              <Form.Control type="text" name="address" value={formData.address} onChange={handleChange} isInvalid={!!errors.address} />
+              <Form.Control.Feedback type="invalid">{errors.address}</Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange} isInvalid={!!errors.phone} />
+              <Form.Control.Feedback type="invalid">{errors.phone}</Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} isInvalid={!!errors.email} />
+              <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} isInvalid={!!errors.password} />
+              <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+            </Form.Group>
+
+            <Button variant="primary" type="submit" disabled={loading} className="w-100">
+              {loading ? <Spinner animation="border" size="sm" /> : "Add Staff"}
+            </Button>
 
              </Form>
 
