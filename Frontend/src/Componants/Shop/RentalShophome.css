@@ -1,0 +1,254 @@
+/* General Reset and Layout */
+.shop_rental-home {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    display: flex;
+}
+
+.shop_sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #003366;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.shop_sidebar h2 {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 24px;
+}
+
+.shop_sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.shop_sidebar ul li {
+    border-bottom: 1px solid #004080;
+}
+
+.shop_sidebar ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 15px 20px;
+    display: block;
+    transition: background 0.3s;
+}
+
+.shop_sidebar ul li a:hover {
+    background-color: #004080;
+}
+
+.shop_content {
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 250px); /* Adjust width to avoid overlap */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.shop_section {
+    display: none;
+}
+
+.shop_section.active {
+    display: block;
+}
+
+.shop_dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.shop_card {
+    flex: 1 1 calc(33.333% - 20px);
+    background: linear-gradient(135deg, #4caf50, #81c784);
+    color: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.shop_card:hover {
+    transform: translateY(-5px);
+}
+
+.shop_card h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+
+.shop_card span {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.shop_table-container {
+    margin-top: 40px;
+}
+
+.shop_table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shop_table th, .shop_table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.shop_table th {
+    background-color: #003366;
+    color: white;
+}
+
+.shop_table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.shop_action-buttons a {
+    text-decoration: none;
+    padding: 8px 12px;
+    color: white;
+    border-radius: 5px;
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+.shop_action-buttons .edit {
+    background-color: #4caf50;
+}
+
+.shop_action-buttons .delete {
+    background-color: #f44336;
+}
+
+.shop_alert {
+    background: #ffeb3b;
+    color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.shop_modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.shop_modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shop_modal-content h2 {
+    margin: 0 0 20px;
+}
+
+.shop_modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.shop_modal-content form input, .shop_modal-content form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.shop_modal-content form button {
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.shop_modal-content form button:hover {
+    background-color: #45a049;
+}
+
+.shop_close-modal {
+    background: #f44336;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.shop_dashboard .shop_card:nth-child(1) {
+    background: linear-gradient(135deg, #2196f3, #64b5f6); /* Available Products */
+}
+
+.shop_dashboard .shop_card:nth-child(2) {
+    background: linear-gradient(135deg, #f44336, #e57373); /* New Bookings */
+}
+
+.shop_dashboard .shop_card:nth-child(3) {
+    background: linear-gradient(135deg, #ff9800, #ffb74d); /* Completed Bookings */
+}
+
+.shop_dashboard .shop_card:nth-child(4) {
+    background: linear-gradient(135deg, #8e24aa, #ba68c8); /* Pending Returns */
+}
+
+/* Example style for default cards (if needed) */
+.shop_dashboard .shop_card {
+    padding: 20px;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .shop_sidebar {
+        width: 200px; /* Narrow sidebar on smaller screens */
+    }
+
+    .shop_content {
+        margin-left: 200px;
+        width: calc(100% - 200px);
+    }
+}
+
+@media (max-width: 480px) {
+    .shop_sidebar {
+        position: relative; /* Sidebar moves above content */
+        width: 100%;
+    }
+
+    .shop_content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
