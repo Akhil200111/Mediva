@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DoctorViewAppointments from './DoctorViewAppointments';
+import ViewProfile from './ViewProfile';
 
 
 const styles = {
@@ -87,6 +89,13 @@ const DoctorHome = () => {
         fetchDoctor();
     }, []);
 
+      const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('doctorlogId');
+    localStorage.removeItem('doctorObjId');
+    navigate('/', { replace: true });
+  };
+
     const handleNavigation = (view) => {
         setCurrentView(view);
     };
@@ -134,7 +143,7 @@ const DoctorHome = () => {
                 )}
                 {currentView === 'appointments' && (
 
-                    <DoctorViewAppoinments />
+                    <DoctorViewAppointments />
 
                 )}
 
@@ -147,7 +156,7 @@ const DoctorHome = () => {
 
                 {currentView === 'profile' && (
                     <div style={styles.card}>
-                        <ViewProfile />
+                        <ViewProfile/>
 
                     </div>
                 )}
