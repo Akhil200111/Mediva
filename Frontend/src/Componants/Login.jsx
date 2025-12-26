@@ -6,7 +6,7 @@ import './login.css'
 
 const Login = () => {
     const [userName, setUserName] = useState('');
-    const [password, setPassword] = useState('');
+    const [passWord, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('')
     const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Login = () => {
         const apiUrl = 'http://localhost:8000/api/auth/login';
 
         try{
-            const response = await axios.post(apiUrl,{userName, password});
+            const response = await axios.post(apiUrl,{userName, passWord});
             console.log("Response==",response);
 
             localStorage.setItem('authToken', response.data.token)
@@ -70,7 +70,7 @@ const Login = () => {
                     </div>
                     <div className="input-group">
                         <label htmlFor="password">Password:</label>
-                        <input type="password"  id="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+                        <input type="password"  id="password" value={passWord} onChange={(e) => setPassword(e.target.value)} required/>
                     </div>
 
                     <div className="button-group">
