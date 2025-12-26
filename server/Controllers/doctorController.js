@@ -1,9 +1,10 @@
+import Appointment from '../models/Appointment.js';
 import Doctor from '../models/Doctor.js';
 import loginData from '../models/Login.js';
 import bcrypt from 'bcrypt';
 import path from 'path';
 export const addDoctor = async (req, res) => {
-  const { name, specialization, contact, email, experience, workingHours, password, totalAppointments } = req.body;
+  const { name, specialization,hospitalName, contact, email, experience, workingHours, password, totalAppointments } = req.body;
   console.log(req.body);
 
   if (!name || !specialization || !contact || !email || !experience || !workingHours || !password || !totalAppointments) {
@@ -29,6 +30,7 @@ export const addDoctor = async (req, res) => {
       name,
       commonKey: loginRecord._id,
       specialization,
+      hospitalName,
       contact,
       email,
       experience,
@@ -134,10 +136,13 @@ export const deleteDoctor = async (req, res) => {
     // Delete associated login data
     await loginData.findByIdAndDelete(doctor.commonKey);
 
+    // Delete all appointments associated with this doctor
+    await Appointment.deleteMany({ doctorId: id });
+
     // Delete the doctor
     await Doctor.findByIdAndDelete(id);
 
-    res.status(200).json({ message: 'Doctor deleted successfully!' });
+    res.status(200).json({ message: 'Doctor and related appointments deleted successfully!' });
   } catch (error) {
     console.error('Error deleting doctor:', error);
     res.status(500).json({ message: 'Error deleting doctor' });

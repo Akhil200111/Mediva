@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+
 import authRoutes from './routes/authRoutes.js';
 import doctorRoutes from './routes/doctorRoutes.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
@@ -12,6 +13,7 @@ import bookingRoutes from './routes/bookingRoutes.js'
 import labStaffRoutes from "./routes/labStaffRoutes.js";
 import checkupRoutes from "./routes/checkupRoutes.js"
 import orderRoutes from './routes/orderRoutes.js'
+
 dotenv.config();
 
 const server = express();

@@ -180,3 +180,35 @@ console.log(shopId);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+export const getShopCounts = async (req, res) => {
+  const { shopId } = req.params;
+console.log(shopId);
+
+  try {
+    // Fetch product counts
+    const totalProducts = await productData.countDocuments({ shopId });
+    const availableProducts = await productData.countDocuments({ shopId,  quantity: { $gt: 0 } });
+    const bookings = await Booking.find().populate({
+      path: 'productId',
+      select: 'shopId'
+    });
+    
+    const completedBookings = bookings.filter(
+      booking => booking.productId?.shopId.toString() === shopId
+    ).length;
+    
+    console.log(completedBookings);
+  
+    res.status(200).json({
+      totalProducts,
+      availableProducts,
+      
+      completedBookings,
+    });
+  } catch (error) {
+    console.error('Error fetching shop counts:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

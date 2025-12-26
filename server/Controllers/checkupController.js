@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 
 export const createCheckup = async (req, res) => {
-  const { labId, userId } = req.body;
+  const { labId, userId ,userAddress,userPhone} = req.body;
   console.log('checkup',req.body);
   
   const file = req.file; // Assuming you're using multer to handle file uploads
@@ -19,6 +19,8 @@ export const createCheckup = async (req, res) => {
       lab: labId,
       user: userId,
       prescription: prescriptionPath,
+      address:userAddress,
+      phone:userPhone
     });
 
     await newCheckup.save();
@@ -98,3 +100,24 @@ console.log(checkupId);
 };
 
 
+export const updatePaymentStatus = async (req, res) => {
+  try {
+    const { checkupId } = req.params;
+console.log(checkupId,'-----------------------');
+
+    // Find the checkup by ID
+    let checkup = await Checkup.findById(checkupId);
+    if (!checkup) {
+      return res.status(404).json({ message: "Checkup not found" });
+    }
+
+    // Update the payment status
+    checkup.isPaid = true;
+    await checkup.save();
+
+    res.status(200).json({ message: "Payment status updated successfully", checkup });
+  } catch (error) {
+    console.error("Error updating payment status:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
