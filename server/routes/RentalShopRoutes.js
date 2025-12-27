@@ -1,6 +1,6 @@
 import express from 'express';
 import authenticateToken from '../middlewares/authenticateToken.js';
-import { deleteRentalShop, getAllShop, getShopBookings, getShopHome, registerShop, updateRentalShop } from '../Controllers/shopController.js';
+import { deleteRentalShop, getAllShop, getShopBookings, getShopCounts, getShopHome, registerShop, updateRentalShop } from '../Controllers/shopController.js';
 
 const router = express.Router();
 
@@ -10,4 +10,5 @@ router.get('/bookings/:shopId',authenticateToken,getShopBookings)
 router.get('/',authenticateToken,getAllShop)
 router.put('/:shopId',authenticateToken,updateRentalShop)
 router.delete('/:shopId',authenticateToken,deleteRentalShop)
+router.get('/:shopId/counts', getShopCounts);
 export default router;

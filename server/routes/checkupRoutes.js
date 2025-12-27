@@ -1,7 +1,7 @@
 import express from 'express';
 import authenticateToken from '../middlewares/authenticateToken.js'; // Token authentication middleware
 import { upload } from '../utils/multer.js'; // Utility for handling file uploads
-import { createCheckup, getCheckupsForLab, getCheckupsForUser, updateCheckupStatus, uploadResult } from '../Controllers/checkupController.js';
+import { createCheckup, getCheckupsForLab, getCheckupsForUser, updateCheckupStatus, updatePaymentStatus, uploadResult } from '../Controllers/checkupController.js';
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.put('/:checkupId/status', authenticateToken, updateCheckupStatus);
 // Route for uploading a result for a checkup (once completed by the lab)
 router.post('/:checkupId/result', authenticateToken, upload.single('result'), uploadResult);
 
-
+router.put('/update-payment/:checkupId',updatePaymentStatus)
 
 router.get('/lab/:labId',authenticateToken, getCheckupsForLab);
 export default router;

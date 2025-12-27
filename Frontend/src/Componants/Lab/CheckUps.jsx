@@ -1,38 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import LabSidebar from './LabSidebar';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import LabSidebar from "./LabSidebar";
+import axios from "axios";
+import { Modal, Button, Form } from "react-bootstrap"; // Import React-Bootstrap components
+import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap styles are imported
 
-const CheckUps = () => {
+function CheckUps() {
   const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const labobjId = localStorage.getItem('labobjId');
-  const authToken = localStorage.getItem('authToken');
+  const [selectedCheckup, setSelectedCheckup] = useState(null);
+  const [amount, setAmount] = useState("");
+  const [paymentLinks, setPaymentLinks] = useState({});
+  const [showModal, setShowModal] = useState(false); // Controls Modal Visibility
+  const labobjId = localStorage.getItem("labobjId");
+  const authToken = localStorage.getItem("authToken");
 
   useEffect(() => {
     if (!labobjId || !authToken) {
-      navigate('/login'); // Redirect to login if missing credentials
+      navigate("/"); // Redirect to login if missing credentials
       return;
     }
     fetchBookings();
   }, [labobjId, authToken, navigate]);
 
-  // ✅ Fetch all checkups for the logged-in lab
   const fetchBookings = async () => {
     try {
       const response = await axios.get(`http://localhost:8000/api/checkup/lab/${labobjId}`, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
 
-      console.log('Bookings Data:', response.data);
+      console.log("Bookings Data:", response.data);
       setBookings(response.data.checkups);
     } catch (error) {
-      console.error('Error fetching bookings:', error);
+      console.error("Error fetching bookings:", error);
     }
   };
 
-  // ✅ Update checkup status (Pending → In Progress → Completed)
   const updateStatus = async (checkupId, newStatus) => {
     try {
       await axios.put(
@@ -41,87 +45,119 @@ const CheckUps = () => {
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
 
-      fetchBookings(); // Refresh data
+      fetchBookings();
     } catch (error) {
-      console.error('Error updating status:', error);
+      console.error("Error updating status:", error);
     }
   };
 
-  // ✅ Upload test result & Update status to "Completed"
   const handleFileUpload = async (checkupId, file) => {
     const formData = new FormData();
-    formData.append('result', file);
+    formData.append("result", file);
 
     setUploading(true);
     try {
-      // Step 1: Upload the result file
       const response = await axios.post(`http://localhost:8000/api/checkup/${checkupId}/result`, formData, {
         headers: {
           Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response);
-      
 
-      // Step 2: After upload, update status to "Completed"
-    //   await updateStatus(checkupId, 'Completed');
-
-      alert('Result uploaded and status updated to Completed');
-      fetchBookings(); // Refresh data
+      alert("Result uploaded successfully");
+      fetchBookings();
     } catch (error) {
-      console.error('Error uploading result:', error);
+      console.error("Error uploading result:", error);
     } finally {
       setUploading(false);
     }
   };
 
+  // Open payment modal
+  const openPaymentModal = (checkup) => {
+    setSelectedCheckup(checkup);
+    setAmount("");
+    setShowModal(true);
+  };
+
+  // Generate Payment Link
+  const generatePaymentLink = async () => {
+    if (!amount || amount <= 0) {
+      alert("Please enter a valid amount.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/payments/checkupLink",
+        { checkupId: selectedCheckup._id, amount },
+        { headers: { Authorization: `Bearer ${authToken}` } }
+      );
+
+      if (response.data.success) {
+        setPaymentLinks((prev) => ({
+          ...prev,
+          [selectedCheckup._id]: response.data.paymentLink,
+        }));
+        alert(`Payment link generated: ${response.data.paymentLink}`);
+        fetchBookings()
+        setShowModal(false); // Close the modal after success
+      } else {
+        alert("Failed to generate payment link.");
+      }
+    } catch (error) {
+      console.error("Error generating payment link:", error);
+      alert("Payment link generation failed.");
+    }
+  };
+
   return (
-    <div style={{ display: 'flex' }}>
+    <div >
       <LabSidebar />
-      <div style={{ marginLeft: '16rem', padding: '20px', width: '100%' }}>
+      <div style={{  padding: "20px", width: "100%" }}>
         <h2>CheckUps & Bookings</h2>
         {bookings.length > 0 ? (
           <table border="1" width="100%" cellPadding="10">
             <thead>
               <tr>
                 <th>Patient Name</th>
-                <th>Test Type</th>
                 <th>Date</th>
-                <th>Status</th>
+                <th>phone</th>
+                <th>Address</th>
                 <th>Prescription</th>
                 <th>Update Status</th>
                 <th>Upload Result</th>
+                <th>Payment</th>
               </tr>
             </thead>
             <tbody>
-              {bookings.map((booking) => (
+              {bookings.slice().reverse().map((booking) => (
                 <tr key={booking._id}>
-                  <td>{booking.user?.name || 'N/A'}</td>
-                  <td>{booking.testName || 'Unknown'}</td>
+                  <td>{booking.user?.name || "N/A"}</td>
                   <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
-                  <td>{booking.status}</td>
+                  <td>{booking.phone}</td>
+                  <td>{booking.address}</td>
                   <td>
                     {booking.prescription ? (
                       <a
-                        href={`http://localhost:8000${booking.prescription}`} 
-                        target="_blank" 
+                        href={`http://localhost:8000${booking.prescription}`}
+                        target="_blank"
                         rel="noopener noreferrer"
                       >
                         View Prescription
                       </a>
                     ) : (
-                      'No Prescription'
+                      "No Prescription"
                     )}
                   </td>
                   <td>
-                    <select
-                      value={booking.status}
-                      onChange={(e) => updateStatus(booking._id, e.target.value)}
-                    >
+                    <select value={booking.status} onChange={(e) => updateStatus(booking._id, e.target.value)}
+                      disabled={booking.status === "Completed"}>
                       <option value="Pending">Pending</option>
                       <option value="In Progress">In Progress</option>
-                      <option value="Completed" disabled>Completed</option> {/* Disabled to prevent manual change */}
+                      <option value="Completed" disabled>
+                        Completed
+                      </option>
                     </select>
                   </td>
                   <td>
@@ -129,9 +165,21 @@ const CheckUps = () => {
                       type="file"
                       accept=".pdf,.jpg,.jpeg,.png"
                       onChange={(e) => handleFileUpload(booking._id, e.target.files[0])}
-                      disabled={uploading || booking.status === 'Completed'}
+                      disabled={uploading || booking.status === "Completed"}
                     />
                   </td>
+                  <td>
+  {booking.isPaid ? (
+    <p className="btn btn-success btn-sm">Completed</p>
+  ) : booking.paymentLink? (
+    <p className="btn btn-secondary btn-sm">Generated...</p>
+  ) : (
+    <button className="btn btn-primary btn-sm" onClick={() => openPaymentModal(booking)}>
+      Generate Payment Link
+    </button>
+  )}
+</td>
+
                 </tr>
               ))}
             </tbody>
@@ -140,6 +188,34 @@ const CheckUps = () => {
           <p>No bookings available.</p>
         )}
       </div>
+
+      {/* React-Bootstrap Modal for Payment */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Enter Payment Amount</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="amount">
+              <Form.Label>Amount</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={generatePaymentLink}>
+            Generate Link
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

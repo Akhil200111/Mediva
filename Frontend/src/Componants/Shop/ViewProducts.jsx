@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Card, Button, Container, Row, Col } from 'react-bootstrap';
+// import './ViewProducts.css'; // Import custom CSS
 
 function ViewProducts({ onEdit }) {
   const [products, setProducts] = useState([]);
@@ -51,17 +52,26 @@ function ViewProducts({ onEdit }) {
       <Row>
         {products.map((product) => (
           <Col key={product._id} sm={12} md={6} lg={4} className="mb-4">
-            <Card>
+            <Card className="h-100">
               <Card.Img
                 variant="top"
                 src={product.image ? `http://localhost:8000/${product.image}` : 'placeholder-image-url.jpg'}
                 alt={product.equipmentName}
+                className="card-img-top"
+                style={{height:'200px'}}
               />
-              <Card.Body>
+              <Card.Body className="d-flex flex-column">
                 <Card.Title>{product.equipmentName}</Card.Title>
                 <Card.Text>{product.description}</Card.Text>
-                <Button variant="primary" className="me-2" onClick={() => onEdit(product)}>Edit</Button>
-                <Button variant="danger" onClick={() => handleDelete(product._id)}>Delete</Button>
+                <Card.Text>Quantity:{product.quantity}</Card.Text>
+                <div className="mt-auto">
+                  <Button variant="primary" className="me-2" onClick={() => onEdit(product)}>
+                    Edit
+                  </Button>
+                  <Button variant="danger" onClick={() => handleDelete(product._id)}>
+                    Delete
+                  </Button>
+                </div>
               </Card.Body>
             </Card>
           </Col>

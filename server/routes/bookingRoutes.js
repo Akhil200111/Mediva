@@ -1,5 +1,5 @@
 import express from "express";
-import { bookProduct, cancelBooking, getUserBookings } from "../Controllers/bookingController.js";
+import { bookProduct, cancelBooking, getUserBookings, returnBooking } from "../Controllers/bookingController.js";
 import authenticateToken from "../middlewares/authenticateToken.js";
 
 const router = express.Router();
@@ -13,4 +13,5 @@ router.post("/",authenticateToken, bookProduct);
 // Route to get bookings for a specific user
  router.get("/:userId",authenticateToken, getUserBookings);
 router.delete('/:bookingId',authenticateToken,cancelBooking)
+router.put('/return/:bookingId',returnBooking)
 export default router;

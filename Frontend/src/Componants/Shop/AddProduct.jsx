@@ -1,124 +1,126 @@
 import axios from "axios";
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
-const AddProduct = () => {
-    // State to handle form inputs
-    const [formData, setFormData] = useState({
-        equipmentName: "",
-        category: "",
-        description: "",
-        quantity: "",
-        condition: "",
-        rentalPrice: "",
-        securityDeposit: "",
-        lastMaintenance: "",
-        nextMaintenance: "",
-        image: null, // Change from array to single file
+function AddProduct() {
+  // State to handle form inputs
+  const [formData, setFormData] = useState({
+    equipmentName: "",
+    category: "",
+    description: "",
+    quantity: "",
+    condition: "",
+    rentalPrice: "",
+    securityDeposit: "",
+    lastMaintenance: "",
+    nextMaintenance: "",
+    image: null, // Change from array to single file
+  });
+
+  const shopId = localStorage.getItem("shopObjId");
+  const token = localStorage.getItem("authToken");
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Handle file input change for a single image
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]; // Store only the first file
+    setFormData((prevData) => ({
+      ...prevData,
+      image: file,
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Create a FormData object
+    const formDataToSend = new FormData();
+
+    // Append all form fields to the FormData object
+    Object.keys(formData).forEach((key) => {
+      if (key === "image" && formData.image) {
+        formDataToSend.append("image", formData.image); // Append single image
+      } else {
+        formDataToSend.append(key, formData[key]);
+      }
     });
 
-    const shopId = localStorage.getItem("shopObjId");
-    const token = localStorage.getItem("authToken");
+    formDataToSend.append("shopId", shopId);
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData((prevData) => ({
-            ...prevData, 
-             [name] : value,
-        }));
-    };
-
-    // Handle file input change for a single image
-    const handleFileChange = (e) => {
-        const file = e.target.files[0]; //store only the first file
-        setFormData((prevData) => ({
-            ...prevData,
-            image: file,
-        }));
-    };
-
-    // Handle form submission
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        // create a formData object
-        const formDataToSend = new FormData();
-
-        // Append all form fields to the FormData object
-        Object.keys(formData).forEach((key) => {
-            if(key === "image" && formData.image){
-                formDataToSend.append("image", formData.image); //Append single image
-            } else {
-                formDataToSend.append(key, formData[key]);
-            }
-        });
-
-        formDataToSend.append("shopId", shopId);
-
-        try {
-            // Send a POST request using axios
-            const response = await axios.post("http://localhost:8000/api/product/addProduct", 
-                formDataToSend,
-                {
-                    headers: {
-                        "Content-Type" : "multipart/form-data",
-                        Authorization:      `Bearer ${token}`,
-                    },
-                }
-            );
-
-            console.log(response);
-
-            if(response.status === 201){
-                console.log("Form Submitted:", response.data);
-                alert(response.data.message);
-
-            } else{
-                console.error("Form submission failed with status:", response.status);
-                
-            }
-        } catch (error) {
-            console.error("Error submitting form:", error);
-            alert(error.response.data.message);
+    try {
+      // Send a POST request using Axios
+      const response = await axios.post(
+        "http://localhost:8000/api/product/addProduct",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         }
-    };
+      );
+
+      console.log(response);
+
+      if (response.status === 201) {
+        console.log("Form Submitted:", response.data);
+        alert(response.data.message)
+        // Handle success (e.g., display a success message, redirect, etc.)
+      } else {
+        console.error("Form submission failed with status:", response.status);
+        // Handle failure (e.g., display an error message)
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(error.response.data.message)
+      // Handle error (e.g., display an error message)
+    }
+  };
 
   return (
     <div className="form-container">
-        <h1>Add Equipment</h1>
-        <form id="addEquipmentForm" onSubmit={handleSubmit}>
-            <h3>Equipment Details</h3>
+      <h1>Add Equipment</h1>
+      <form id="addEquipmentForm" onSubmit={handleSubmit}>
+        <h3>Equipment Details</h3>
 
-            <div className="form-group">
-                <label htmlFor="equipmentName">Equipment Name</label>
-                <input 
-                    type="text" 
-                    name="equipmentName" 
-                    id="equipmentName" 
-                    placeholder="Enter Equipment Name"
-                    value={formData.equipmentName}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="category">Category</label>
-                <select name="category" 
-                    id="category"
-                    value={formData.category}
-                    onChange={handleSubmit}
-                    required
-                    >
-                        <option value="">Select Category</option>
-                        <option value="Respiratory">Respiratory Equipments</option>
-                        <option value="Mobility">Mobility Equipments</option>
-                        <option value="Bed">Hospital Bed</option>
-                        <option value="Monitoring">Monitoring Devices</option>
-                        <option value="Others">Others</option>
-                    </select>      
-            </div>
-
-            <div className="form-group">
+        <div className="form-group">
+          <label htmlFor="equipmentName">Equipment Name</label>
+          <input
+            type="text"
+            id="equipmentName"
+            name="equipmentName"
+            placeholder="Enter Equipment Name"
+            value={formData.equipmentName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="category">Category</label>
+          <select
+            id="category"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Category</option>
+            <option value="Respiratory">Respiratory Equipment</option>
+            <option value="Mobility">Mobility Equipment</option>
+            <option value="Beds">Hospital Beds</option>
+            <option value="Monitoring">Monitoring Devices</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div className="form-group">
           <label htmlFor="description">Description</label>
           <textarea
             id="description"
@@ -182,9 +184,9 @@ const AddProduct = () => {
         <div className="form-group">
           <button type="submit">Add Equipment</button>
         </div>
-        </form>
+      </form>
 
-              <style>
+      <style>
         {`
           .form-container {
             max-width: 800px;
@@ -250,7 +252,6 @@ const AddProduct = () => {
           }
         `}
       </style>
-      
     </div>
   );
 }

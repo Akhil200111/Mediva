@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LabSidebar from './LabSidebar';
 import axios from 'axios';
 
-const Dashboard = () => {
+function Dashboard() {
   const navigate = useNavigate();
   const [labStaff, setLabStaff] = useState(null);
 
@@ -13,7 +13,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!lablogId || !authToken) {
-      navigate('/login'); // Redirect to login if credentials are missing
+      navigate('/'); // Redirect to login if credentials are missing
     } else {
       fetchLabStaff();
     }
@@ -32,7 +32,6 @@ console.log(response);
       console.error('Error fetching lab staff:', error);
     }
   };
-
   return (
     <>
       <LabSidebar />

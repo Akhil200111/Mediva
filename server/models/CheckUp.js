@@ -25,6 +25,19 @@ const checkupSchema = new Schema(
       type: String,  // Stores the path to the result file once available
       default: null,
     },
+    address:{type:String},
+    phone:{type:String},
+    paymentLink: {
+      type: String, // Store the generated Razorpay payment link
+      default: null,
+    },
+    price:{
+      type:String,
+    },
+    isPaid: {
+      type: Boolean, // Check if payment is done
+      default: false,
+    },
     createdAt: {
       type: Date,
       default: Date.now,

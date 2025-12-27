@@ -11,6 +11,10 @@ import AddLaboratoryStaff from './AddLaboratoryStaff';
 import EditDoctor from './EditDoctor';
 import EditRentalStaff from './EditRentalStaff';
 import { FaBox, FaFlask, FaUserFriends, FaUserMd, FaUsers } from "react-icons/fa";
+import AdminViewRentalStaff from './AdminViewRentalStaff';
+import EditCompanion from './EditCompanion';
+import AdminViewCompanion from './AdminViewCompanion';
+import AddCompanion from './AddCompanion';
 
 
 

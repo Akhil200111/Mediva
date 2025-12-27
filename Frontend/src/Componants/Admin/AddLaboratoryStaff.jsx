@@ -4,7 +4,7 @@ import { Container, Form, Button, Row, Col, Alert, Spinner } from 'react-bootstr
 
 const AddLaboratoryStaff = () => {
 
-  cosnt[FormData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     name: "",
     address: "",
     phone: "",
@@ -83,7 +83,7 @@ const AddLaboratoryStaff = () => {
              <Form onSubmit={handleSubmit}>
               <Form.Group className='mb-3'>
                 <Form.Label>Name</Form.Label>
-                <Form.Control type='text' name='name' value={FormData.name} onChange={handleChange} isInvalid= {!error.name}></Form.Control>
+                <Form.Control type='text' name='name' value={formData.name} onChange={handleChange} isInvalid= {!errors.name}></Form.Control>
                 <Form.Control.Feedback type='invalid'>{errors.name}</Form.Control.Feedback>
               </Form.Group>
 

@@ -16,6 +16,9 @@ const doctorSchema = new Schema({
     required: true,
     trim: true,
   },
+  hospitalName:{
+    type: String,
+  },
   email: {
     type: String,
     required: true,
