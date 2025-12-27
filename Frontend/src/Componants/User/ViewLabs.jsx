@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, Button, Container, Modal, Form, InputGroup, FormControl, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { FaPhone, FaEnvelope, FaUpload, FaSearch } from 'react-icons/fa'; // ✅ Bootstrap Icons
+import { FaPhone, FaEnvelope, FaUpload, FaSearch } from 'react-icons/fa'; //  Bootstrap Icons
 import UserSidebar from './UserSidebar';
 
 function ViewLabs() {
@@ -11,7 +11,11 @@ function ViewLabs() {
   const [showModal, setShowModal] = useState(false);
   const [selectedLab, setSelectedLab] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
+  //  New State for User Address & Phone
+  const [userAddress, setUserAddress] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+
   const token = localStorage.getItem("authToken");
   const userId = localStorage.getItem("userObjId");
 
@@ -41,8 +45,8 @@ function ViewLabs() {
   };
 
   const handleSubmit = async () => {
-    if (!files[selectedLab._id]) {
-      alert('Please upload a prescription.');
+    if (!files[selectedLab._id] || !userAddress || !userPhone) {
+      alert('Please fill all fields and upload a prescription.');
       return;
     }
 
@@ -50,6 +54,8 @@ function ViewLabs() {
     formData.append('labId', selectedLab._id);
     formData.append('prescription', files[selectedLab._id]);
     formData.append('userId', userId);
+    formData.append('userAddress', userAddress);  //  Send User Address
+    formData.append('userPhone', userPhone);      //  Send User Phone Number
 
     try {
       const response = await axios.post('http://localhost:8000/api/checkup', formData, {
@@ -59,6 +65,8 @@ function ViewLabs() {
       console.log(response);
       alert('Checkup request sent successfully.');
       setShowModal(false);
+      setUserAddress('');  //  Clear input after submission
+      setUserPhone('');    //  Clear input after submission
     } catch (error) {
       console.error('Error:', error);
     }
@@ -79,7 +87,7 @@ function ViewLabs() {
       <Container className="mt-4" style={{ marginLeft: '300px' }}>
         <h2 className="mb-4 text-primary">🏥 Available Labs</h2>
 
-        {/* Search Input */}
+        {/* 🔍 Search Input */}
         <InputGroup className="mb-4 shadow-sm">
           <InputGroup.Text>
             <FaSearch />
@@ -92,7 +100,7 @@ function ViewLabs() {
           />
         </InputGroup>
 
-        {/* Loading Spinner */}
+        {/* ⏳ Loading Spinner */}
         {loading ? (
           <div className="text-center">
             <Spinner animation="border" variant="primary" />
@@ -156,13 +164,36 @@ function ViewLabs() {
         )}
       </Container>
 
-      {/* Modal for file upload */}
+      {/* 📂 Modal for File Upload */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Upload Prescription for {selectedLab?.labName}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
+            {/* 📍 User Address Input */}
+            <Form.Group controlId="formUserAddress" className="mb-3">
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter your address"
+                value={userAddress}
+                onChange={(e) => setUserAddress(e.target.value)}
+              />
+            </Form.Group>
+
+            {/* 📞 User Phone Number Input */}
+            <Form.Group controlId="formUserPhone" className="mb-3">
+              <Form.Label>Phone Number</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter your phone number"
+                value={userPhone}
+                onChange={(e) => setUserPhone(e.target.value)}
+              />
+            </Form.Group>
+
+            {/* 📎 File Upload */}
             <Form.Group controlId="formFile" className="mb-3">
               <Form.Label>Select Prescription</Form.Label>
               <Form.Control type="file" accept="image/*,.pdf" onChange={handleFileChange} />

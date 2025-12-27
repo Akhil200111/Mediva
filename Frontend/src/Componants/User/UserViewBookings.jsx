@@ -65,6 +65,13 @@ const CancelButton = styled.button`
   }
 `;
 
+const DateHeader = styled.h3`
+  color: #555;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #ddd;
+`;
+
 const UserViewBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -139,32 +146,56 @@ const UserViewBookings = () => {
     }
   };
 
+  // Group bookings by date
+  const groupBookingsByDate = (bookings) => {
+    return bookings.reduce((grouped, booking) => {
+      const date = new Date(booking.appointmentDate).toLocaleDateString();
+      if (!grouped[date]) {
+        grouped[date] = [];
+      }
+      grouped[date].push(booking);
+      return grouped;
+    }, {});
+  };
+
+  const groupedBookings = groupBookingsByDate(bookings);
+
   return (
     <Container>
       <UserSidebar />
       <Content style={{ marginLeft: "16rem", padding: "20px", width: "100%" }}>
+      
         <Title>My Bookings</Title>
         {loading ? (
           <EmptyMessage>Loading your bookings...</EmptyMessage>
         ) : bookings.length === 0 ? (
           <EmptyMessage>No bookings found.</EmptyMessage>
         ) : (
-          bookings.slice().reverse().map((booking) => (
-            <BookingCard key={booking._id}>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <img src={`http://localhost:8000/${booking.doctorId.image}`} alt="Doctor" />
-                <div>
-                  <h3>{booking.doctorId.name}</h3>
-                  <p>Specialization: {booking.doctorId.specialization}</p>
-                  <p>Appointment Date: {new Date(booking.appointmentDate).toLocaleDateString()}</p>
-                  <p>Status: {booking.status}</p>
-                  <h4>Token: {booking.tokenNumber}</h4>
-                  <CancelButton onClick={() => handleCancelAppointment(booking._id, booking.doctorId._id, booking.appointmentDate)}>
-                    Cancel Appointment
-                  </CancelButton>
-                </div>
-              </div>
-            </BookingCard>
+          Object.entries(groupedBookings).map(([date, bookings]) => (
+            <div key={date}>
+              <DateHeader>{date}</DateHeader>
+              {bookings.map((booking) => (
+                <BookingCard key={booking._id}>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <img src={`http://localhost:8000/${booking.doctorId.image}`} alt="Doctor" />
+                    <div>
+                      <h3>{booking.doctorId.name}</h3>
+                      <p>Specialization: {booking.doctorId.specialization}</p>
+                      <p>Appointment Date: {new Date(booking.appointmentDate).toLocaleDateString()}</p>
+                      <p>Status: {booking.status}</p>
+                      <h4>Token: {booking.tokenNumber}</h4>
+                      {booking.status !== "visited" && (
+  <CancelButton 
+    onClick={() => handleCancelAppointment(booking._id, booking.doctorId._id, booking.appointmentDate)}
+  >
+    Cancel Appointment
+  </CancelButton>
+)}
+                    </div>
+                  </div>
+                </BookingCard>
+              ))}
+            </div>
           ))
         )}
       </Content>

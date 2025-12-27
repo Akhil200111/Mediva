@@ -1,8 +1,44 @@
-
 import React, { useEffect, useState } from "react";
-import { Card, Button, Container, Row, Col } from "react-bootstrap";
+import { Card, Button, Container, Row, Col, Badge } from "react-bootstrap";
 import UserSidebar from "./UserSidebar";
 import axios from "axios";
+import styled from "styled-components";
+
+// Styled components for custom styling
+const StyledCard = styled(Card)`
+  height: 100%;
+  transition: transform 0.2s, box-shadow 0.2s;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const StatusBadge = styled(Badge)`
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+`;
+
+const BookingContainer = styled(Container)`
+  margin-left: 16rem;
+  padding: 20px;
+  width: 100%;
+`;
+
+const BookingTitle = styled.h2`
+  margin-bottom: 2rem;
+  font-weight: bold;
+  color: #333;
+  
+`;
+
+const NoBookingsMessage = styled.p`
+  text-align: center;
+  color: #777;
+  font-size: 1.2rem;
+`;
 
 function UserProductBooking() {
   const userId = localStorage.getItem("userObjId");
@@ -41,22 +77,20 @@ function UserProductBooking() {
       setBookings(bookings.filter((booking) => booking._id !== bookingId));
     } catch (error) {
       console.error("Error canceling booking:", error);
-      alert(error.response.data.message)
+      alert(error.response.data.message);
     }
   };
 
   return (
     <Container fluid className="d-flex">
       <UserSidebar />
-      <Container
-        style={{ marginLeft: "16rem", padding: "20px", width: "100%" }}
-      >
-        <h2 className="mb-4">Your Bookings</h2>
+      <BookingContainer>
+        <BookingTitle style={{textAlign:'center'}}>Product  Bookings</BookingTitle>
         <Row>
           {bookings.length > 0 ? (
             bookings.map((booking) => (
               <Col key={booking._id} md={4} className="mb-4">
-                <Card style={{ height: "100%" }} className="d-flex flex-column">
+                <StyledCard className="d-flex flex-column">
                   <Card.Img
                     variant="top"
                     src={`http://localhost:8000/${booking.productId.image}`}
@@ -64,32 +98,34 @@ function UserProductBooking() {
                   />
                   <Card.Body className="d-flex flex-column justify-content-between">
                     <div>
+                      
                       <Card.Title>{booking.productId.equipmentName}</Card.Title>
                       <Card.Text>
-                        Booking Date: {new Date(booking.bookedAt).toLocaleDateString()}
+                        <strong>Booking Date:</strong>{" "}
+                        {new Date(booking.bookedAt).toLocaleDateString()}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>Price:</strong> ${booking.productId.rentalPrice}
                       </Card.Text>
                     </div>
                     <div>
-                      <Button variant="primary" disabled>
-                        {booking.status.toUpperCase()}
-                      </Button>
-                      <Button 
-                        variant="danger" 
-                        className="ml-2"
+                      <Button
+                        variant="danger"
+                        className="w-100"
                         onClick={() => cancelBooking(booking._id)}
                       >
-                        Cancel
+                        Cancel Booking
                       </Button>
                     </div>
                   </Card.Body>
-                </Card>
+                </StyledCard>
               </Col>
             ))
           ) : (
-            <p>No bookings found.</p>
+            <NoBookingsMessage>No bookings found.</NoBookingsMessage>
           )}
         </Row>
-      </Container>
+      </BookingContainer>
     </Container>
   );
 }

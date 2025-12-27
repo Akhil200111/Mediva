@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUserMd, FaShoppingCart, FaPills, FaClipboardList, FaSignOutAlt, FaHome, FaTags } from 'react-icons/fa';
+import { FaUserMd, FaShoppingCart, FaPills, FaClipboardList, FaSignOutAlt, FaHome, FaTags, FaUserFriends } from 'react-icons/fa';
 
 const styles = {
   sidebar:{
     width: "16rem", // Fixed width
-    height: "100vh", // Full height
+    // height: "100vh", // Fu
     position: "fixed", // Sidebar stays fixed
     top: 0, // Stick to top
     left: 0, // Stick to left
@@ -76,11 +76,18 @@ const UserSidebar = () => {
           <FaPills /> Lab
         </Link>
         <Link to="/mycheckups" style={ styles.navItem }>
-            <FaClipboardList style={{ marginRight: '10px' }} /> Checkups
+            <FaClipboardList /> Checkups
           </Link>
         <Link to="/userviewproduct" style={styles.navItem}>
           <FaTags /> Products
         </Link>
+         {/* <Link to="/userCompanion" style={styles.navItem}>
+          <FaUserFriends /> Companion
+        </Link> */}
+        <Link to="/usercompanionbookings" style={styles.navItem}>
+        <FaUserFriends /> companionbookings
+        </Link>
+       
         <Link to="/userproductbookings" style={styles.navItem}>
           <FaTags /> Products bookings
         </Link>

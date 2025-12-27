@@ -11,7 +11,7 @@ const Container = styled.div`
   padding: 20px;
   border-radius: 10px;
   background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(8, 2, 2, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const Title = styled.h2`
@@ -181,10 +181,10 @@ function UserRegister() {
             <Input type='password' name='confirmPassword' placeholder='Confirm your password' value={formData.confirmPassword} onChange={handleChange} required />
           </FormGroup>
           {error && <ErrorMessage>{error}</ErrorMessage>}
-          <FormGroup>
+          {/* <FormGroup>
             <FaCamera />
             <Input type='file' name='photo' accept='image/*' onChange={handleFileChange} />
-          </FormGroup>
+          </FormGroup> */}
           <Button type='submit'>Register</Button>
         </Form>
       </Container>

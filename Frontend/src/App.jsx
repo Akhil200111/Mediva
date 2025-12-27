@@ -18,6 +18,15 @@ import CheckUps from './Componants/Lab/CheckUps'
 import MyCheckups from './Componants/User/MyCheckups'
 import Groceries from './Componants/User/Groceries'
 import BoyHome from './Componants/DeliveryBoy/BoyHome'
+import UserViewCompanion from './Componants/User/UserViewCompanion'
+import UserViewCompanionBooking from './Componants/User/UserViewCompanionBooking'
+import RequestsUser from './Componants/Companion/Requestuser'
+import CompanionAcceptedRequest from './Componants/Companion/CompanionAcceptedRequest'
+
+// import UserViewCompanion from './Componants/User/UserViewCompanion'
+// import RequestsUser from './Componants/Companion/Requestsuser'
+// import UserViewCompanionBooking from './Componants/User/UserViewCompanionBooking'
+// import CompanionAcceptedRequest from './Componants/Companion/CompanionAcceptedRequest'
 
 function App() {
 
@@ -42,6 +51,11 @@ function App() {
        <Route path='/mycheckups' element={<MyCheckups />} />
        <Route path='/groceries' element={<Groceries />} />
        <Route path='/deliveryboy' element={<BoyHome />} />
+
+       <Route path='/userCompanion' element={<UserViewCompanion />}/>
+       <Route path='/usercompanionbookings' element={<UserViewCompanionBooking/>}/>
+       <Route path='/requests' element={<RequestsUser/>}/>
+       <Route path='/patients' element={<CompanionAcceptedRequest/>}/>
 
      </Routes>
     </>

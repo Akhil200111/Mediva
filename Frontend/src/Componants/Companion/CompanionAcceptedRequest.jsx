@@ -86,14 +86,16 @@ function CompanionAcceptedRequest() {
   };
 
   const generatePaymentLink = async () => {
-    if (!amount || amount <= 0) {
+
+   const newAmount = Number(amount);
+    if (!newAmount || newAmount <= 0) {
       alert("Please enter a valid amount.");
       return;
     }
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/payments/compnionpayment",
+        "http://localhost:8000/api/payments/companionpayment",
         { bookingId: selectedRequest._id, amount }
       );
 

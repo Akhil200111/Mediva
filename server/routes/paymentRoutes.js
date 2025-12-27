@@ -9,6 +9,6 @@ router.post('/createLink',createPaymentLink)
 router.post('/checkupLink',createCheckupPaymentLink)
 // Route for fetching payment details
 router.get("/payment/:paymentId", getPaymentDetails);
-router.post('/compnionpayment',createCompanionPaymentLink)
+router.post('/companionpayment',createCompanionPaymentLink)
 
 export default router;

@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import UserSidebar from './UserSidebar';
 
 const styles = {
@@ -207,55 +207,61 @@ function Userhome() {
       
       {/* Content Cards */}
       <div style={styles.content}>
+        <Link to={'/userviewdoctor'} style={{textDecoration:'none'}}>
         <div
           style={styles.card}
           id="view-doctor"
           onMouseEnter={(e) => e.target.style.transform = styles.cardHover.transform}
           onMouseLeave={(e) => e.target.style.transform = 'none'}
         >
-          <h3 style={styles.cardTitle}>View Doctors</h3>
+          <h3 style={styles.cardTitle}>Doctors</h3>
           <p style={styles.cardText}>Find the best doctors in your area and view their profiles.</p>
         </div>
-
+        </Link>
+        <Link to={'/view-Lab'} style={{textDecoration:'none'}}>
         <div
           style={styles.card}
           id="book-doctor"
           onMouseEnter={(e) => e.target.style.transform = styles.cardHover.transform}
           onMouseLeave={(e) => e.target.style.transform = 'none'}
         >
-          <h3 style={styles.cardTitle}>Book a Doctor</h3>
-          <p style={styles.cardText}>Schedule an appointment with your preferred doctor easily.</p>
+          <h3 style={styles.cardTitle}>Lab</h3>
+          <p style={styles.cardText}>Book lab tests and view results conveniently online.</p>
         </div>
-
+</Link>
+<Link to={'/groceries'} style={{textDecoration:'none'}}>
         <div
           style={styles.card}
           id="view-groceries"
           onMouseEnter={(e) => e.target.style.transform = styles.cardHover.transform}
           onMouseLeave={(e) => e.target.style.transform = 'none'}
         >
-          <h3 style={styles.cardTitle}>View Groceries</h3>
+          <h3 style={styles.cardTitle}> Groceries</h3>
           <p style={styles.cardText}>Browse and shop for essential groceries with ease.</p>
         </div>
-
+        </Link>
+        <Link to={'/userCompanion'} style={{textDecoration:'none'}}>
         <div
           style={styles.card}
           id="view-medicines"
           onMouseEnter={(e) => e.target.style.transform = styles.cardHover.transform}
           onMouseLeave={(e) => e.target.style.transform = 'none'}
         >
-          <h3 style={styles.cardTitle}>View Medicines</h3>
-          <p style={styles.cardText}>Search for and purchase the medicines you need.</p>
+          <h3 style={styles.cardTitle}> Companion</h3>
+          <p style={styles.cardText}>Find a trusted companion for support and assistance.</p>
         </div>
-
+        </Link>
+        <Link to={'/userviewproduct'} style={{textDecoration:'none'}}>
         <div
           style={styles.card}
           id="view-appointments"
           onMouseEnter={(e) => e.target.style.transform = styles.cardHover.transform}
           onMouseLeave={(e) => e.target.style.transform = 'none'}
         >
-          <h3 style={styles.cardTitle}>View Appointments</h3>
-          <p style={styles.cardText}>Check your upcoming appointments and their details.</p>
+          <h3 style={styles.cardTitle}> Products</h3>
+          <p style={styles.cardText}>Discover a wide range of products tailored to your needs.</p>
         </div>
+        </Link>
       </div>
     </div>
   );

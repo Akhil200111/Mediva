@@ -89,7 +89,7 @@ const UserViewDoctor = () => {
     <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
       <UserSidebar />
       <Container className="py-4" >
-        <h2 className="text-center mb-4">View Doctors</h2>
+        <h2 className="text-center mb-4"> Doctors</h2>
 
         {/* Search Input */}
         <Form.Control
@@ -117,7 +117,9 @@ const UserViewDoctor = () => {
                     <Card.Text>
                       <strong>Specialty:</strong> {doctor.specialization}
                       <br />
-                      <strong>Contact:</strong> {doctor.contact}
+                      <strong>WorkingHours:</strong> {doctor.workingHours}<br/>
+                      <strong>Contact:</strong> {doctor.contact}<br/>
+                      <strong>Hospital:</strong> {doctor.hospitalName}
                     </Card.Text>
                     <Button variant="primary" onClick={() => handleBookAppointment(doctor)}>
                       Book Appointment
